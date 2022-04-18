@@ -43,12 +43,12 @@ namespace IntegralVisualization
 
         double Function(double x)
         {
-            return Math.Pow(5, x);
+            return Math.Pow(x, 5);
         }
 
         double DerivativeFunction(double x)
         {
-            return 5 * Math.Pow(4, x);
+            return 5 * Math.Pow(x, 4);
         }
 
         double CalculateInaccuracy(int n, double a = 0, double b = 3)
