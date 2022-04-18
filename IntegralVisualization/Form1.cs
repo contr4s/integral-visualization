@@ -12,6 +12,8 @@ namespace IntegralVisualization
 {
     public partial class Form1: Form
     {
+        public const int HugePartitioning = 5000;
+
         public Form1()
         {
             InitializeComponent();
@@ -22,10 +24,10 @@ namespace IntegralVisualization
 
         void ShowFunctionGraphic(IEnumerable<(double, double)> function)
         {
-            chart.Series[0].Points.Clear();
+            chart.Series[1].Points.Clear();
             foreach (var point in function)
             {
-                chart.Series[0].Points.AddXY(point.Item1, point.Item2);
+                chart.Series[1].Points.AddXY(point.Item1, point.Item2);
             }
         }
 
@@ -90,20 +92,20 @@ namespace IntegralVisualization
 
         private void Compute(object sender, EventArgs e)
         {
-            chart.Series[1].Points.Clear();
+            chart.Series[0].Points.Clear();
             double integral = 0;
 
             var partition = Partitioning();
             if (int.TryParse(partitionRate.Text, out int rate))
                 partition = Partitioning(rate);
-            if (rate > 5000)
+            if (rate > HugePartitioning)
             {
                 MessageBox.Show("partition rate is too big, visualizing is disabled to reduce computation time");
             }
             foreach (var range in partition)
             {
                 var point = SelectPoint(range, GetSelectionType());
-                if (rate <= 5000)
+                if (rate <= HugePartitioning)
                     Visualize(range, point);
                 integral += (range.Item2 - range.Item1) * Function(point);
             }
@@ -114,8 +116,8 @@ namespace IntegralVisualization
 
         private void Visualize((double, double) range, double point)
         {
-            chart.Series[1].Points.AddXY(range.Item1, Function(point));
-            chart.Series[1].Points.AddXY(range.Item2, Function(point));
+            chart.Series[0].Points.AddXY(range.Item1, Function(point));
+            chart.Series[0].Points.AddXY(range.Item2, Function(point));
         }
 
         PointSelectionType GetSelectionType()
